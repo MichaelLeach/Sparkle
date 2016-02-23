@@ -19,10 +19,10 @@ Pod::Spec.new do |s|
   }
 
   s.platform = :osx, '10.7'
-  s.source   = { :http => "https://github.com/sparkle-project/Sparkle/releases/download/#{s.version}/Sparkle-#{s.version}.tar.bz2" }
-
-  s.public_header_files = 'Sparkle.framework/Versions/A/Headers/*.h'
-  s.vendored_frameworks  = 'Sparkle.framework'
+  s.source   = { :git => "https://github.com/MichaelLeach/Sparkle.git", :branch => "develop" }
+  s.prepare_command = 'make build'
+  s.public_header_files = 'build/Release/Sparkle.framework/Versions/A/Headers/*.h'
+  s.vendored_frameworks  = 'build/Release/Sparkle.framework'
   s.xcconfig            = {
     'FRAMEWORK_SEARCH_PATHS' => '"${PODS_ROOT}/Sparkle"',
     'LD_RUNPATH_SEARCH_PATHS' => '@loader_path/../Frameworks'
