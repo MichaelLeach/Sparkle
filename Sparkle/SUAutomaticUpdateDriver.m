@@ -176,11 +176,25 @@ static const NSTimeInterval SUAutomaticUpdatePromptImpatienceTimer = 60 * 60 * 2
     [super installWithToolAndRelaunch:relaunch displayingUserInterface:showUI];
 }
 
+- (BOOL)shouldAbortInstallOnSystemPowerOff
+{
+    id<SUUpdaterDelegate> updaterDelegate = [self.updater delegate];
+    
+    if (!updaterDelegate || ![updaterDelegate respondsToSelector:@selector(updaterShouldAbortInstallOnSystemPowerOff:)]) {
+        return YES;
+    }
+    else {
+        return [updaterDelegate updaterShouldAbortInstallOnSystemPowerOff:self.updater];
+    }
+}
+
 - (void)systemWillPowerOff:(NSNotification *)__unused note
 {
-    [self abortUpdateWithError:[NSError errorWithDomain:SUSparkleErrorDomain code:SUSystemPowerOffError userInfo:@{
-        NSLocalizedDescriptionKey: SULocalizedString(@"The update will not be installed because the user requested for the system to power off", nil)
-    }]];
+    if ([self shouldAbortInstallOnSystemPowerOff]) {
+        [self abortUpdateWithError:[NSError errorWithDomain:SUSparkleErrorDomain code:SUSystemPowerOffError userInfo:@{
+            NSLocalizedDescriptionKey: SULocalizedString(@"The update will not be installed because the user requested for the system to power off", nil)
+        }]];
+    }
 }
 
 - (void)applicationWillTerminate:(NSNotification *)__unused note

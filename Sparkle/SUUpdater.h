@@ -337,6 +337,18 @@ SU_EXPORT extern NSString *const SUUpdaterAppcastNotificationKey;
 - (void)updaterDidShowModalAlert:(SUUpdater *)updater;
 
 /*!
+ Returns whether the update should be aborted if the OS is about to shutdown.
+ 
+ The default behaviour is to abort updates if the application was quit due to
+ the OS being shutdown or restarted.
+ 
+ \param updater The SUUpdater instance.
+ 
+ \return \c NO to override this behaviour and attempt install
+ */
+- (BOOL)updaterShouldAbortInstallOnSystemPowerOff:(SUUpdater *)updater;
+
+/*!
     Called when an update is scheduled to be silently installed on quit.
 
     \param updater The SUUpdater instance.
